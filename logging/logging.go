@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	Service  string = "serviceName"
 	Enpoint  string = "endpoint"
-	EnvVar   string = "environmentVariable"
+	Service  string = "serviceName"
 	Function string = "function"
+	EnvVar   string = "environmentVariable"
 )
 
 func New() (*zap.Logger, error) {
