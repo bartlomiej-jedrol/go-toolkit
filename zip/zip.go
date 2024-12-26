@@ -1,3 +1,4 @@
+// Package zip provides tools for zipping.
 package zip
 
 import (
@@ -10,12 +11,15 @@ import (
 	"time"
 )
 
-func Folder(folderPath, zipPath, fileName string) {
+// Folder zips folder to zip.
+func Folder(folderPath, zipPath, fileName string) string {
 	currentDate := time.Now().Format("2006-01-02")
-	zp := filepath.Join(zipPath, fmt.Sprintf("%v_%v.zip", currentDate, fileName))
+	filePath := fmt.Sprintf("%v_%v.zip", currentDate, fileName)
+	zp := filepath.Join(zipPath, filePath)
 	zipFile, err := os.Create(zp)
 	if err != nil {
 		log.Fatal(err)
+		return ""
 	}
 	defer zipFile.Close()
 
@@ -60,4 +64,6 @@ func Folder(folderPath, zipPath, fileName string) {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	return filePath
 }
