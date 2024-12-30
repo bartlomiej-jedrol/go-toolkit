@@ -26,3 +26,15 @@ func New() (*zap.Logger, error) {
 	}
 	return logger, nil
 }
+
+func Error(msg, service, function string, endpoint, envVar *string) {
+	logger, err := New()
+	if err != nil {
+		return
+	}
+
+	logger.Error(msg,
+		zap.String(Service, service),
+		zap.String(Function, function),
+		zap.String("fileId", "id"))
+}
