@@ -33,17 +33,15 @@ func New() (*zap.Logger, error) {
 	return logger, nil
 }
 
-func Error(msg, service, function string, endpoint, envVar *string) {
-	logger, err := New()
-	if err != nil {
-		return
-	}
-
+func buildFields(msg string, errMsg error, service, function string, endpoint, envVar *string) []zapcore.Field {
 	if msg == "" {
 		msg = "no message"
 	}
 
 	fields := []zapcore.Field{}
+	if errMsg != nil {
+		fields = append(fields, zap.Error(errMsg))
+	}
 	if service != "" {
 		fields = append(fields, zap.String(Service, service))
 	}
@@ -56,6 +54,25 @@ func Error(msg, service, function string, endpoint, envVar *string) {
 	if envVar != nil {
 		fields = append(fields, zap.String(EnvVar, *envVar))
 	}
+	return fields
+}
 
+func Error(msg string, errMsg error, service, function string, endpoint, envVar *string) {
+	logger, err := New()
+	if err != nil {
+		return
+	}
+
+	fields := buildFields(msg, errMsg, service, function, endpoint, envVar)
 	logger.Error(msg, fields...)
+}
+
+func Info(msg string, errMsg error, service, function string, endpoint, envVar *string) {
+	logger, err := New()
+	if err != nil {
+		return
+	}
+
+	fields := buildFields(msg, nil, service, function, endpoint, envVar)
+	logger.Info(msg, fields...)
 }

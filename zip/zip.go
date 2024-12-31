@@ -9,10 +9,15 @@ import (
 	"os"
 	"path/filepath"
 	"time"
+
+	iLog "github.com/bartlomiej-jedrol/go-toolkit/log"
 )
 
 // Folder zips folder to zip.
 func Folder(folderPath, zipPath, fileName string) string {
+	function := "Folder"
+	iLog.Info("starting zipping files...", nil, "", function, nil, nil)
+
 	currentDate := time.Now().Format("2006-01-02")
 	filePath := fmt.Sprintf("%v_%v.zip", currentDate, fileName)
 	zp := filepath.Join(zipPath, filePath)
@@ -65,5 +70,6 @@ func Folder(folderPath, zipPath, fileName string) string {
 		log.Fatal(err)
 	}
 
+	iLog.Info("finished zipping files", nil, "", function, nil, nil)
 	return filePath
 }
