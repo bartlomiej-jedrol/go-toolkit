@@ -21,7 +21,7 @@ type Service struct {
 	// Optional fields
 	LocalPaths         `yaml:"local_paths"`
 	GoogleDriveFolders `yaml:"google_drive_folders"`
-	DBAddress          `yaml:"db_address`
+	DBAddress          `yaml:"db_address"`
 }
 
 type Config struct {
