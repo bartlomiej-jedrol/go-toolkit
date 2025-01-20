@@ -1,6 +1,7 @@
 package log
 
 import (
+	"fmt"
 	"log"
 	"time"
 
@@ -14,6 +15,9 @@ const (
 	Function string = "function"
 	EnvVar   string = "environment_variable"
 )
+
+type field interface {
+}
 
 func New() (*zap.Logger, error) {
 	config := zap.NewProductionConfig()
@@ -33,14 +37,21 @@ func New() (*zap.Logger, error) {
 	return logger, nil
 }
 
-func buildFields(msg string, errMsg error, service, function string, endpoint, envVar *string) []zapcore.Field {
-	if msg == "" {
-		msg = "no message"
+func buildMessage(message string, field field) string {
+	if field == nil {
+		return message
+	}
+	return fmt.Sprintf(message+": %+v", field)
+}
+
+func buildFields(message string, errorMessage error, service, function string, endpoint, environmentVariable *string) []zapcore.Field {
+	if message == "" {
+		message = "no message"
 	}
 
 	fields := []zapcore.Field{}
-	if errMsg != nil {
-		fields = append(fields, zap.Error(errMsg))
+	if errorMessage != nil {
+		fields = append(fields, zap.Error(errorMessage))
 	}
 	if service != "" {
 		fields = append(fields, zap.String(Service, service))
@@ -51,28 +62,30 @@ func buildFields(msg string, errMsg error, service, function string, endpoint, e
 	if endpoint != nil {
 		fields = append(fields, zap.String(Enpoint, *endpoint))
 	}
-	if envVar != nil {
-		fields = append(fields, zap.String(EnvVar, *envVar))
+	if environmentVariable != nil {
+		fields = append(fields, zap.String(EnvVar, *environmentVariable))
 	}
 	return fields
 }
 
-func Error(msg string, errMsg error, service, function string, endpoint, envVar *string) {
+func Error(message string, field field, errorMessage error, service, function string, endpoint, environmentVariable *string) {
 	logger, err := New()
 	if err != nil {
 		return
 	}
 
-	fields := buildFields(msg, errMsg, service, function, endpoint, envVar)
+	msg := buildMessage(message, field)
+	fields := buildFields(msg, errorMessage, service, function, endpoint, environmentVariable)
 	logger.Error(msg, fields...)
 }
 
-func Info(msg string, errMsg error, service, function string, endpoint, envVar *string) {
+func Info(message string, field field, errorMessage error, service, function string, endpoint, environmentVariable *string) {
 	logger, err := New()
 	if err != nil {
 		return
 	}
 
-	fields := buildFields(msg, nil, service, function, endpoint, envVar)
+	msg := buildMessage(message, field)
+	fields := buildFields(msg, nil, service, function, endpoint, environmentVariable)
 	logger.Info(msg, fields...)
 }
