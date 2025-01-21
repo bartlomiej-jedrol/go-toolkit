@@ -44,7 +44,7 @@ func buildMessage(message string, field field) string {
 	return fmt.Sprintf(message+": %+v", field)
 }
 
-func buildFields(message string, errorMessage error, service, function string, endpoint, environmentVariable *string) []zapcore.Field {
+func buildFields(message string, errorMessage error, service, function, endpoint, environmentVariable string) []zapcore.Field {
 	if message == "" {
 		message = "no message"
 	}
@@ -59,16 +59,16 @@ func buildFields(message string, errorMessage error, service, function string, e
 	if function != "" {
 		fields = append(fields, zap.String(Function, function))
 	}
-	if endpoint != nil {
-		fields = append(fields, zap.String(Enpoint, *endpoint))
+	if endpoint != "" {
+		fields = append(fields, zap.String(Enpoint, endpoint))
 	}
-	if environmentVariable != nil {
-		fields = append(fields, zap.String(EnvVar, *environmentVariable))
+	if environmentVariable != "" {
+		fields = append(fields, zap.String(EnvVar, environmentVariable))
 	}
 	return fields
 }
 
-func Error(message string, field field, errorMessage error, service, function string, endpoint, environmentVariable *string) {
+func Error(message string, field field, errorMessage error, service, function, endpoint, environmentVariable string) {
 	logger, err := New()
 	if err != nil {
 		return
@@ -79,7 +79,7 @@ func Error(message string, field field, errorMessage error, service, function st
 	logger.Error(msg, fields...)
 }
 
-func Info(message string, field field, errorMessage error, service, function string, endpoint, environmentVariable *string) {
+func Info(message string, field field, errorMessage error, service, function, endpoint, environmentVariable string) {
 	logger, err := New()
 	if err != nil {
 		return
