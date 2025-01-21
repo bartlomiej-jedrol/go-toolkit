@@ -17,7 +17,7 @@ func LoadDefaultConfig() (*aws.Config, error) {
 	function := "LoadDefaultConfig"
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
-		iLog.Error("failed to load default AWS config", "", err, service, function, "", "")
+		iLog.Error("failed to load default AWS config", "", err, service, function)
 		return nil, err
 	}
 	return &cfg, nil
@@ -30,12 +30,12 @@ func GetEnvironmentVariable(envVarName string) (string, error) {
 	// on environment variables.
 	err := godotenv.Load()
 	if err != nil {
-		iLog.Error("failed to load .env file", "", err, service, function, "", "")
+		iLog.Error("failed to load .env file", "", err, service, function)
 	}
 
 	ev := os.Getenv(envVarName)
 	if ev == "" {
-		iLog.Error("failed to get environment variable", "", err, service, function, "", envVarName)
+		iLog.Error("failed to get environment variable", "", err, service, function)
 		return "", err
 	}
 	return ev, nil
