@@ -30,12 +30,12 @@ func GetEnvironmentVariable(envVarName string) (string, error) {
 	// on environment variables.
 	err := godotenv.Load()
 	if err != nil {
-		iLog.Error("failed to load .env file", "", err, service, function)
+		iLog.Error("failed to load .env file", nil, err, service, function)
 	}
 
 	ev := os.Getenv(envVarName)
 	if ev == "" {
-		iLog.Error("failed to get environment variable", "", err, service, function)
+		iLog.Error("failed to get environment variable", nil, err, service, function)
 		return "", err
 	}
 	return ev, nil
